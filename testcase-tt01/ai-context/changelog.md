@@ -12,3 +12,8 @@
 - [2026-07-17] [web-merchant] activation-code-management - 基于《激活码管理模块.md》新建模块 5 文件；高危内容逐项溯源，接口参数/错误码/测试数据待补充。
 - [2026-07-17] [shared] 全局 - 新建 `ai-context-ingest` skill（文档解析入库，只提取+移交），扩展 `ai-context-maintainer` 增加"按提取报告写入"任务类型（§3.7），登记两 skill 协作关系到 `CLAUDE.md`。
 - [2026-07-17] [web-merchant] material-library - 按《话术素材库模块.md》提取报告写入（ingest→maintainer 端到端测试）；C1 类型枚举按模块文档三类为准，C2/C3 标未证实。
+- [2026-07-17] [web-merchant] customer-profile-management - 按《客户画像管理模块.md》提取报告写入；字段定义/枚举值/数值约束（分组名30字、字段名10字）逐项溯源；接口详情、数据库列类型、国家枚举列表标待补充；销售信息分组命名（§二销售信息 vs §一§3销售意向）标未证实待确认。
+- [2026-07-17] [web-merchant] quick-reply-management - 按《快捷回复管理模块.md》提取报告写入（新建模块 5 文件）；data-model 用真实表 zs_scrm_reply_quick(_group)、列类型溯源 DB §B7.3/B7.4；启用/禁用、≤5 素材、适用激活码、分组维度等与 DB 结构差异 C-Q1~Q7 标未证实待确认；接口参数/错误码/测试数据待补充。
+- [2026-07-17] [web-merchant] material-library - 按《话术素材库模块.md》补 §五.4 移动分组/批量移动分组（目标分组=当前素材类型下已有分组）至 requirement.md / ui-spec.md。
+- [2026-07-17] [web-merchant] keyword-reply-management - 按《关键词回复管理.md》提取报告写入（新建模块 5 文件）；data-model 用真实表 zs_scrm_reply_keyword(_group)、列类型溯源 DB §B7.5/B7.6；C-K1~K11 标未证实待确认；接口参数/错误码/测试数据待补充。
+- [2026-07-17] [web-merchant] keyword-reply-management - 用户确认 C-K2「翻译后发送」机制（请求三方翻译接口将原文翻译成译文再发送，源：用户提供），回填至 requirement/data-model/test-notes；C-K3/C-K4/C-K5 维持待确认。

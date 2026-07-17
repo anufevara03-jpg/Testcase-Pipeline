@@ -40,13 +40,26 @@
 
 非高危内容不强制逐项溯源，但仍遵守"不编造"底线。
 
+> 读取侧（`ai-context-query`）同样适用：读取遇 `待补充` 须原样透传给下游，不得自行补全或推断（详见 `.claude/skills/ai-context-query/SKILL.md` §7 读后闸门）。
+
 ## 知识库 skill 协作
 
-知识库维护由两个 skill 协作完成：
+知识库由三个 skill 分工：ingest 提取、maintainer 写入、query 读取。
 
 - **`ai-context-ingest`**：读取/解析用户提供的文档，结构化提取并逐项溯源、标记高危内容、检测冲突，产出提取报告（仅内存呈现，不落盘、不写 `ai-context/`）。
 - **`ai-context-maintainer`**：`ai-context/` 的**唯一写入方**。接收提取报告后按模板写入对应端/模块文件，执行写前闸门与完整性检查，更新 changelog。
+- **`ai-context-query`**：`ai-context/` 的**规范读取入口（只读）**。按"确认数据库内容"（表名/字段名/枚举名跨文件拼装）和"加载模块测试设计上下文"（5 文件 + 相关 shared，按 6 可测维度组织）两个场景读取，保留每条溯源、聚合 `待补充` 透传给下游，不写、不落盘、不编造。
 
-协作链路：用户提供文档 → `/ai-context-ingest` 解析产报告 → `/ai-context-maintainer` 按报告写入。
+维护链路：用户提供文档 → `/ai-context-ingest` 解析产报告 → `/ai-context-maintainer` 按报告写入。
 
-分工原则：ingest 只提取不写入，maintainer 只写入不解析；写入/模板/防幻觉逻辑集中在 maintainer，不在两处重复。
+分工原则：ingest 只提取不写入，maintainer 只写入不解析，query 只读取不写入不解析；写入/模板/防幻觉逻辑集中在 maintainer，读取/跨文件拼装/维度组织逻辑集中在 query，不在多处重复。
+
+## 知识库 → 测试用例链路
+
+测试用例生成优先从知识库取上下文，不直接读 `TemporaryFile/` 原始文档（原文档仅入库阶段使用）：
+
+- `testcase-create` / `biz-test-analysis` 经 `/ai-context-query` 场景 B 取 KB 上下文包作为上下文源。
+- KB 是用例生成的上下文权威源；遇 `待补充` 透传为用例侧「待产品确认」，不得编造。
+- `coverage.json` 每项挂 `kb_anchor` 回溯 KB；`待补充` 无锚点项进「缺口桶」，不计入覆盖率分母。
+
+链路：用户提供文档 → ingest → maintainer 写入 KB → **query 读取拼装** → biz-test-analysis → testcase-create → Excel。

@@ -44,3 +44,4 @@ ai-context/
 - 新建模块文件必须读取 `.claude/skills/ai-context-maintainer/templates/` 中的对应模板。
 - 任何功能变更必须同步更新对应端模块的需求和接口文件。
 - 完成更新后应执行完整性检查。
+- 读取/查询上下文（确认数据库内容、为模块加载测试设计上下文）通过 `ai-context-query` Skill 完成；下游用例生成（`testcase-create` / `biz-test-analysis`）经它取上下文，不直接读 `TemporaryFile/` 原始文档。
